@@ -1,0 +1,156 @@
+package application;
+	
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+
+
+public class Main extends Application {
+	GridPane mainPane = new GridPane();
+	VBox rbtree = new VBox();
+	ToggleGroup rbbutton = new ToggleGroup();
+	ToggleButton insert = new ToggleButton("Insert");
+	ToggleButton search = new ToggleButton("Search");
+	TextField insertNTF = new TextField();
+	HBox insertf = new HBox();
+	Button searchB = new Button("insert");
+	TextField insertSTF = new TextField();
+	
+	State blank = new State(" ");
+	genericrbt<State> grbt = new genericrbt<>(blank);
+	
+	@Override
+	public void start(Stage primaryStage) {
+		try {
+			Pane root = makePanes();
+			Scene scene = new Scene(root,500,500);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//allows us to make the Primary Pane
+	public Pane makePanes() {
+		onStartUp(); // This allows us to populate the main tree with all the states
+		
+		gridPaneProperties();//adds the items to the Pane and manages its properties
+		
+		leftSide();//allows us to set the properties for the left side of the border pane
+		
+		middleSide();//
+		
+		return mainPane;
+	}
+	
+	public void gridPaneProperties() {
+		mainPane.setGridLinesVisible(true);
+		mainPane.add(rbtree, 150, 140);
+		mainPane.add(insertf, 200, 150);
+	}
+	
+	public void leftSide() {
+		rbtree.getChildren().add(0, insert);
+		rbtree.getChildren().add(1, search);
+		setButtonsProperty();
+	}
+	
+	public void middleSide() {
+		insertf.getChildren().add(0, insertNTF);
+		insertf.getChildren().add(1, insertSTF);
+		insertf.getChildren().add(2, searchB);
+	}
+	
+	public void setButtonsProperty() {
+		insertEventHandler iEV = new insertEventHandler();
+		//builds the buttons and automatically sets insert as toggled upon startup
+		insert.setToggleGroup(rbbutton);
+		insert.setSelected(true);
+		insert.setOnAction(iEV);
+		
+		search.setToggleGroup(rbbutton);
+		search.setOnAction(iEV);
+		
+		insert();
+	}
+	
+	public void onStartUp() {
+		File file;
+		String temp;
+		
+		try {
+			file = new File("src\\application\\States.txt");
+			
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			
+			while((temp = br.readLine()) != null) {
+				State s = new State(temp);
+				grbt.insert(s);
+			}
+			fr.close();
+			br.close();
+			
+		}catch(Exception e) {
+			System.out.println("File not found");
+		}
+	}
+	
+	public void insert() {
+		if(insertf.isVisible()) {
+			searchB.setOnAction(new searchButtonEventHandler());
+		}
+	}
+
+	public void searchTree() {
+		String name = insertNTF.getText();
+		String state = insertSTF.getText();
+		
+		State s = (State) grbt.searchN(new State(state)).data;
+		
+		boolean in = s.search(new Person(name, 0));
+	}
+
+	public void search() {
+		
+	}
+	
+	public class insertEventHandler implements EventHandler<ActionEvent>{
+		@Override
+		public void handle(ActionEvent e) {
+			if(insert.isSelected())
+				insert();
+			else
+				search();
+		}
+	}
+	
+	public class searchButtonEventHandler implements EventHandler<ActionEvent>{
+		@Override
+		public void handle(ActionEvent e) {
+			searchTree();
+			
+		}
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}

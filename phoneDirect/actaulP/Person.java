@@ -1,0 +1,27 @@
+public class Person {
+    String name;
+    int age;
+    long number;
+
+    public Person(String name, long number) {
+        this(name, null, number);
+    }
+
+    public Person(String name, int age, long number) {
+        this.name = name;
+        this.age = age;
+        this.number = number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public long getNumber() {
+        return number;
+    }
+}

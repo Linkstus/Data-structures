@@ -1,0 +1,97 @@
+package hwk1;
+
+public class Time_Taken 
+{
+
+	final static int TEN = 10;
+	final static int HUNDRED = 100;
+	final static int THOUSAND = 1000;
+	final static int TENTHOUSAND = 10000;
+	final static int HUNDREDTHOUSAND = 100000;
+	
+	static int linearSearch(int[] array, int numCheck)
+	{	
+		boolean found = false;
+		int pos = -1;
+		for(int i = 0; i < array.length; i++)
+		{
+			if(array[i] == numCheck)
+			{
+				found = true;
+				pos = i;
+				break;
+			}
+		}
+		if(found)
+			return pos;
+		else
+			return pos;
+	}
+
+	static int binarySearch(int[] array, int num)
+	{
+		int firstPos = array[0];
+		int lastPos = array[array.length-1];
+		int midPos = array.length / 2;
+		boolean found = false;
+		int pos = -1;
+		
+		while(found != true || firstPos != lastPos)
+		{
+			if(num > array[midPos])
+			{
+				firstPos = midPos + 1;
+				midPos = (firstPos + lastPos) / 2;
+			}
+			else if(num < array[midPos])
+			{
+				lastPos = midPos;
+				midPos = (firstPos + lastPos) / 2;
+			}
+			else
+			{
+				found = true;
+				pos = midPos;
+			}
+		}
+		
+		if(found)
+			return pos;
+		else
+			return pos;
+		
+	}
+	static int[] arrayRandomFill(int[] arr)
+	{
+		for(int i = 0; i < arr.length; i++)
+		{
+			arr[i] = (int)(Math.random() * 100000) + 1;
+		}
+		
+		return arr;
+	}
+	public static void main(String[] args) 
+	{
+		int[] array1 = new int[TEN];
+		int rand = (int)(Math.random() * 100000) + 1;
+		int linearSearchReturn = linearSearch(array1, rand);
+		int binarySearchReturn = binarySearch(array1, rand);
+		if(linearSearchReturn != -1)
+		{
+			System.out.printf("The Linear search found the number %d at pos %d\n", rand, linearSearchReturn);
+		}
+		else
+		{
+			System.out.printf("The Linear search did not find the number %d until pos %d\n", rand, linearSearchReturn);
+		}
+		if(binarySearchReturn != -1)
+		{
+			System.out.printf("The Binary search found the number %d at pos %d\n", rand, binarySearchReturn);
+		}
+		else
+		{
+			System.out.printf("The Binary search did not find the number %d until pos %d\n", rand, binarySearchReturn);
+		}
+	}
+
+}

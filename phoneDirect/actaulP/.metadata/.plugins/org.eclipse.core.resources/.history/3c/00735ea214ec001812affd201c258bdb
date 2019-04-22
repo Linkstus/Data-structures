@@ -1,0 +1,332 @@
+package application;
+
+enum Colour {
+    RED, BLACK;
+};
+
+class genericrbt<T> {
+    node current;
+    node parent;
+    node grandP;
+    node greatGP;
+    node header;
+    static node nullNode;
+    Colour color;
+
+    static {
+        nullNode = new node(null);
+        nullNode.left = nullNode;
+        nullNode.right = nullNode;
+    }
+
+    public int whatIs(T item1, node item2) {
+        if (item1 instanceof Long) {
+            return compareDigits((Long) item1, (Long) item2.data);
+        } else if (item1 instanceof Integer) {
+            return compareInts((Integer) item1, (Integer) item2.data);
+        } else if (item1 instanceof State) {
+            return compareStates((State) item1, item2);
+        } else {
+            return compareStrings((String) item1, (node) item2);
+        }
+    }
+
+    public int compareStates(State item1, node item2) {
+        if (item1.getName().compareTo(((State) item2.data).getName()) < 0) {
+            return -1;
+        } else if (item1.getName().compareTo(((State) item2.data).getName()) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public int compareDigits(long item1, long item2) {
+        if (item1 < item2) {
+            return -1;
+        } else if (item1 > item2) {
+            return 1;
+        } else
+            return 0;
+    }
+
+    public int compareInts(int item1, int item2) {
+        if (item1 < item2)
+            return -1;
+        else if (item1 > item2)
+            return 1;
+        else
+            return 0;
+    }
+
+    public int compareStrings(String item1, node item2) {
+        if (item1.compareTo((String) item2.data) < 0) {
+            return -1;
+        } else if (item1.compareTo((String) item2.data) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public genericrbt(T negInf) {
+        header = new node(negInf);
+        header.left = nullNode;
+        header.right = nullNode;
+    }
+
+    public boolean isEmpty() {
+        return header.right == nullNode;
+    }
+
+    public void makeEmpty() {
+        header.right = nullNode;
+    }
+
+    public void insert(T item) {
+        current = parent = grandP = header;
+        nullNode.data = item;
+
+        while (current.data != item) {
+            greatGP = grandP;
+            grandP = parent;
+            parent = current;
+            current = (whatIs(item, current) == -1) ? current.left : current.right;
+
+            if (current.left.color == color.RED && current.right.color == color.RED)
+                rotation(item);
+        }
+
+        if (current != nullNode)
+            return;
+        current = new node(item, nullNode, nullNode);
+
+        if (whatIs(item, parent) == -1)
+            parent.left = current;
+        else
+            parent.right = current;
+        rotation(item);
+    }
+
+    public void rotation(T item) {
+        current.color = color.RED;
+        current.left.color = color.BLACK;
+        current.right.color = color.BLACK;
+
+        if (parent.color == color.RED) {
+            grandP.color = color.RED;
+            if (whatIs(item, grandP) != whatIs(item, parent))
+                parent = rotate(item, grandP);
+            current = rotate(item, greatGP);
+            current.color = color.BLACK;
+        }
+        header.right.color = color.BLACK;
+    }
+
+    public node rotate(T item, node parent) {
+
+        if (whatIs(item, parent) == -1)
+            return parent.left = whatIs(item, parent.left) == -1 ? rotateLeftChild(parent.left)
+                    : rotateRightChild(parent.left);
+        else
+            return parent.right = whatIs(item, parent.right) == -1 ? rotateLeftChild(parent.right)
+                    : rotateRightChild(parent.right);
+    }
+
+    public node rotateLeftChild(node k2) {
+        node k1 = k2.left;
+        k2.left = k1.right;
+        k1.right = k2;
+        return k1;
+    }
+
+    public node rotateRightChild(node k1) {
+        node k2 = k1.right;
+        k1.right = k2.left;
+        k2.left = k1;
+        return k2;
+    }
+
+    public int countNodes() {
+        return countNodes(header.right);
+    }
+
+    public int countNodes(node r) {
+        if (r == nullNode) {
+            return 0;
+        } else {
+            int l = 1;
+            l += countNodes(r.left);
+            l += countNodes(r.right);
+            return l;
+        }
+    }
+
+    public boolean searchB(T val) {
+        return search(header.right, val);
+    }
+
+    public node searchN(T val) {
+    	 return searchN(header.right, val);
+    }
+    public boolean search(node r, T val) {
+        boolean found = false;
+
+        while ((r != nullNode) && !found) {
+            node rval = r;
+            int g = whatIs(val, rval);
+            if (g == -1)
+                r = r.left;
+            else if (g == 1)
+                r = r.right;
+            else {
+                found = true;
+                break;
+            }
+            found = search(r, val);
+        }
+        return found;
+    }
+    
+    public node searchN(node r, T val) {
+    	node founds = new node(new State(" "));
+    	boolean found = false;
+    	
+    	while((r != nullNode) && !found){
+    		node rval = r;
+    		int g = whatIs(val, rval);
+    		if(g == -1)
+    			r = r.left;
+    		else if(g == 1)
+    			r = r.right;
+    		else {
+    			found = true;
+    			founds = r;
+    			break;
+    		}
+    		found = search(r, val);
+    	}
+    	return founds;
+    }
+
+    public void inorder() {
+        inorder(header.right);
+    }
+
+    public void inorder(node r) {
+        if (r != nullNode) {
+            inorder(r.left);
+            char c = 'B';
+            if (r.color == color.RED)
+                c = 'R';
+            System.out.print(r.data + "" + c + " ");
+            inorder(r.right);
+        }
+    }
+
+    public void preorder() {
+        preorder(header.right);
+    }
+
+    public void preorder(node r) {
+        if (r != nullNode) {
+            char c = 'B';
+            if (r.color == color.RED) {
+                c = 'R';
+            }
+            System.out.print(r.data + "" + c + " ");
+            preorder(r.left);
+            preorder(r.right);
+        }
+    }
+
+    public void postorder() {
+        postorder(header.right);
+    }
+
+    public void postorder(node r) {
+        if (r != nullNode) {
+            postorder(r.left);
+            postorder(r.right);
+            char c = 'B';
+            if (r.color == color.RED)
+                c = 'R';
+            System.out.print(r.data + "" + c + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+
+        genericrbt<Long> r = new genericrbt<Long>(Long.MIN_VALUE);
+
+        r.insert(2294151320L);
+        r.insert(2298349198L);
+        r.insert(2298349197L);
+        r.insert(2717674710L);
+        r.insert(2993758417L);
+        r.insert(2293001735L);
+        r.insert(9125923913L);
+
+        System.out.println(r.isEmpty());
+        r.makeEmpty();
+        System.out.println(r.isEmpty());
+
+        // System.out.println("Phonenumbers in order");
+        // r.inorder();
+
+        /*
+         * genericrbt<Integer> r1 = new genericrbt<Integer>(0);
+         * 
+         * r1.insert(56); r1.insert(102); r1.insert(4); r1.insert(28); r1.insert(256);
+         * r1.insert(72); r1.insert(150);
+         * 
+         * System.out.println("Random numbers in order"); r1.inorder();
+         * System.out.println("\nRandom numbers preorder"); r1.preorder();
+         */
+
+        /*
+         * genericrbt<String> r2 = new genericrbt<String>(" "); r2.insert("carson");
+         * r2.insert("James"); r2.insert("Jhonnie"); r2.insert("matthew");
+         * r2.insert("tamikel");
+         * 
+         * System.out.println("Strings in order"); r2.inorder();
+         */
+
+        /*
+         * State temp = new State(" "); State g = new State("Georiga"); State a = new
+         * State("Alabama"); State f = new State("Florida"); State n = new
+         * State("New York");
+         * 
+         * genericrbt<State> r = new genericrbt<State>(temp); r.insert(g); r.insert(a);
+         * r.insert(f); r.insert(n);
+         * 
+         * System.out.println("\nThe number of nodes in the tree are: " +
+         * r.countNodes());
+         * 
+         * System.out.println("\nState inorder"); r.inorder();
+         * System.out.println("\nState preorder"); r.preorder();
+         */
+    }
+}
+
+class node<T> {
+    node left, right;
+    T data;
+    Colour color;
+
+    public node(T data) {
+        this(data, null, null);
+    }
+
+    public node(T data, node left, node right) {
+        this.left = left;
+        this.right = right;
+        this.data = data;
+        this.color = color.BLACK;
+    }
+    
+    @Override
+    public String toString() {
+    	return data.toString();
+    }
+}

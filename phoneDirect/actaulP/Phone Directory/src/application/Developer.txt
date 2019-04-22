@@ -1,0 +1,18 @@
+2018-12-01
+
+Insert People:  Starting time: 1543710522006 End time: 1543710522006 Time taken: 0
+Insert People:  Starting time: 1543710522006 End time: 1543710522006 Time taken: 0
+Insert People:  Starting time: 1543710522006 End time: 1543710522006 Time taken: 0
+Insert People:  Starting time: 1543710522006 End time: 1543710522006 Time taken: 0
+Insert People:  Starting time: 1543710522006 End time: 1543710522007 Time taken: 1
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Insert People:  Starting time: 1543710522007 End time: 1543710522007 Time taken: 0
+Search: Starting time: 1543710522007End time: 1543710522011Time taken: 4
+Search: Starting time: 1543710522011End time: 1543710522011Time taken: 0
+Inorder time: Starting time: 1543710522011End time: 1543710522014Time taken: 3
